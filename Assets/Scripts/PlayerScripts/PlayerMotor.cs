@@ -5,6 +5,7 @@ public class PlayerMotor : MonoBehaviour
 private CharacterController controller;
     private Vector3 playerVelocity;
     public float speed = 5f;
+    float dspeed = 5f;
 
     private bool isGrounded;
     public float gravity = -9.8f;
@@ -86,8 +87,10 @@ private CharacterController controller;
     {
         sprinting = !sprinting;
         if (sprinting)
-            speed = 8;
-        else speed = 5;
+        {
+            dspeed = speed;
+            speed *= 2f; }
+        else speed = dspeed;
     }
 
 }
