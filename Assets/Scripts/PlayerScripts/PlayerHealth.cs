@@ -1,20 +1,34 @@
+using System.IO;
 using TMPro;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
+    
     private float health;
     private float lerpTimer;
+
+    [Header("Health Bar")]
     public float maxHealth = 100;
     public float chipSpeed = 2f;
-
     public Image frontHP;
     public Image backHP;
     public TextMeshProUGUI healthText;
+
+    [Header("Overlay")]
+    public Image DmgOverlay;
+    public Image healOverlay;
+    public float duration;
+    public float fadeSpeed;
+
+    private float durationTimer;
     void Start()
     {
         health = maxHealth;
+        DmgOverlay.color = new Color(DmgOverlay.color.r, DmgOverlay.color.g, DmgOverlay.color.b, 0);
+        healOverlay.color = new Color(healOverlay.color.r, healOverlay.color.g, healOverlay.color.b, 0);
     }
 
     
@@ -22,10 +36,31 @@ public class PlayerHealth : MonoBehaviour
     {
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
-      
+        if (DmgOverlay.color.a > 0)
+        {
+            if (health < 30)
+                return;
+            durationTimer += Time.deltaTime;
+            if (durationTimer > duration)
+            {
+                float tempAlpha = DmgOverlay.color.a;
+                tempAlpha -=Time.deltaTime * fadeSpeed;
+                DmgOverlay.color = new Color(DmgOverlay.color.r, DmgOverlay.color.g, DmgOverlay.color.b, tempAlpha);
+            }
+        }
 
 
-
+        if (healOverlay.color.a > 0)
+        {
+            
+            durationTimer += Time.deltaTime;
+            if (durationTimer > duration)
+            {
+                float tempAlpha = healOverlay.color.a;
+                tempAlpha -= Time.deltaTime * fadeSpeed;
+                healOverlay.color = new Color(healOverlay.color.r, healOverlay.color.g, healOverlay.color.b, tempAlpha);
+            }
+        }
     }
 
     public void UpdateHealthUI()
@@ -66,13 +101,18 @@ public class PlayerHealth : MonoBehaviour
     {
         health -= damage;
         lerpTimer = 0f;
-       
+        durationTimer = 0;
+        DmgOverlay.color = new Color(DmgOverlay.color.r, DmgOverlay.color.g, DmgOverlay.color.b, 0.4f);
     }
 
     public void RestoreHealth(float healAmount)
     {
         health += healAmount;
         lerpTimer = 0f;
+        durationTimer = 0;
+        if (health >= 100)
+            return;
+        healOverlay.color = new Color(healOverlay.color.r, healOverlay.color.g, healOverlay.color.b, 0.2f);
     }
 
 }
