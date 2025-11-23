@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "PlayerInput",
     "maps": [
         {
@@ -54,6 +55,15 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "a23d8eec-5b19-42a7-876d-91f6b98ca071",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "40fb4013-5647-4a8e-b63b-1fdf06b1d3ed",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -278,6 +288,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cab456bd-8a05-446b-bb10-a6d4b7787f40",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0621d785-01c6-40a7-911c-982ae41bfae6",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

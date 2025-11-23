@@ -24,18 +24,20 @@ public class PlayerInteract : MonoBehaviour
     void Update()
     {
         playerUI.UpdateText(string.Empty);
+
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        Debug.DrawRay(ray.origin,ray.direction * distance);
-        RaycastHit hitInfo;
-        if (Physics.Raycast(ray, out hitInfo, distance, mask))
+        Debug.DrawRay(ray.origin, ray.direction * distance);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, distance))
         {
-            if (hitInfo.collider.GetComponent<Interactable>() != null)
+            Interactable2 interactable2 = hit.collider.GetComponent<Interactable2>();
+
+            if (interactable2 != null)
             {
-                Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
-                playerUI.UpdateText(interactable.promptMessage);
+                playerUI.UpdateText("Press E to interact");
                 if (inputManager.onFoot.Interact.triggered)
                 {
-                    interactable.BaseInteract();
+                    interactable2.Interact();
                 }
             }
         }
