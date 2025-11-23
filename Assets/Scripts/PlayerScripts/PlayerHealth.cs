@@ -32,7 +32,7 @@ public class PlayerHealth : MonoBehaviour
     }
 
     
-    void Update()
+    void FixedUpdate()
     {
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
