@@ -103,6 +103,10 @@ public class PlayerHealth : MonoBehaviour
         lerpTimer = 0f;
         durationTimer = 0;
         DmgOverlay.color = new Color(DmgOverlay.color.r, DmgOverlay.color.g, DmgOverlay.color.b, 0.4f);
+        if (health <= 0)
+        {
+            QuitGame();
+        }
     }
 
     public void RestoreHealth(float healAmount)
@@ -114,5 +118,17 @@ public class PlayerHealth : MonoBehaviour
             return;
         healOverlay.color = new Color(healOverlay.color.r, healOverlay.color.g, healOverlay.color.b, 0.2f);
     }
+
+    public void QuitGame()
+    {
+        // In a built game
+        Application.Quit();
+
+        // In the editor (so the button actually "works" during testing)
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
+
 
 }
