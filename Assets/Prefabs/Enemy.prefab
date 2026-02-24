@@ -167,3 +167,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 100
+  enemyRenderer: {fileID: 6350652559030383775}
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15

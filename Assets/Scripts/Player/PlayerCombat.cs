@@ -1,6 +1,7 @@
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using TMPro;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -10,6 +11,21 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("UI")]
     public TextMeshProUGUI ammoText;
+
+    [Header("Weapon Visuals & Animation")]
+    public ParticleSystem muzzleFlash;
+    public Transform gunModel;
+    public Transform gunSlide;
+
+    [Header("Recoil Settings")]
+    public float recoilDistance = 0.1f;
+    public float slideKickbackDistance = 0.15f;
+    public float recoilDuration = 0.15f;
+    public float recoilRotation = 5f;
+
+    private Vector3 originalGunPos;
+    private Vector3 originalSlidePos;
+    private Vector3 originalGunRot;
 
     [Header("Weapon Stats")]
     public float damage = 50f;
@@ -25,6 +41,16 @@ public class PlayerCombat : MonoBehaviour
     {
         currentAmmo = maxAmmo;
         UpdateAmmoUI();
+
+        if (gunModel != null)
+        {
+            originalGunPos = gunModel.localPosition;
+            originalGunRot = gunModel.localEulerAngles;
+        }
+        if (gunSlide != null)
+        {
+            originalSlidePos = gunSlide.localPosition;
+        }
     }
 
     void OnEnable() { shootAction.action.Enable(); }
@@ -47,6 +73,9 @@ public class PlayerCombat : MonoBehaviour
         currentAmmo--;
         UpdateAmmoUI();
 
+        if (muzzleFlash != null) muzzleFlash.Play();
+        AnimateGun();
+
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
@@ -57,6 +86,35 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemy.TakeDamage(damage);
             }
+        }
+    }
+
+    void AnimateGun()
+    {
+        if (gunModel != null) gunModel.DOKill(true);
+        if (gunSlide != null) gunSlide.DOKill(true);
+
+        if (gunModel != null)
+        {
+            gunModel.localPosition = originalGunPos;
+            gunModel.localEulerAngles = originalGunRot;
+
+            gunModel.DOLocalMoveZ(originalGunPos.z - recoilDistance, recoilDuration / 2f)
+                .SetLoops(2, LoopType.Yoyo)
+                .SetEase(Ease.OutQuad);
+
+            gunModel.DOLocalRotate(new Vector3(originalGunRot.x - recoilRotation, originalGunRot.y, originalGunRot.z), recoilDuration / 2f)
+                .SetLoops(2, LoopType.Yoyo)
+                .SetEase(Ease.OutQuad);
+        }
+
+        if (gunSlide != null)
+        {
+            gunSlide.localPosition = originalSlidePos;
+
+            gunSlide.DOLocalMoveZ(originalSlidePos.z - slideKickbackDistance, recoilDuration / 2f)
+                .SetLoops(2, LoopType.Yoyo)
+                .SetEase(Ease.OutQuad);
         }
     }
 
